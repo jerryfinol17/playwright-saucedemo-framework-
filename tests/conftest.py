@@ -1,6 +1,6 @@
 import pytest
 from playwright.sync_api import sync_playwright, Browser, Page
-from pages.config import BASE_URL
+from pages.config import BASE_URL, CREDENTIALS
 
 BROWSERS_AND_DEVICES = [
     {"browser_type": "chromium", "device_name": None, "name": "chromium"},
@@ -16,7 +16,8 @@ def page(request) -> Page:
     browser_type = config["browser_type"]
     device_name = config["device_name"]
 
-    with sync_playwright() as p:
+    p = sync_playwright().start()
+    try:
         if browser_type == "chromium":
             browser: Browser = p.chromium.launch(headless=False, slow_mo=300)
         elif browser_type == "firefox":
@@ -38,6 +39,11 @@ def page(request) -> Page:
         page.wait_for_load_state("domcontentloaded")
 
         yield page
-
+    finally:
         context.close()
         browser.close()
+        p.stop()
+
+@pytest.fixture(scope="function", params= list(CREDENTIALS.values()), ids= list(CREDENTIALS.keys()))
+def test_user(request):
+    return request.param

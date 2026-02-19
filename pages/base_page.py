@@ -13,8 +13,9 @@ class BasePage(Page):
 			loc.clear()
 			loc.fill(value)
 
-	def click_element(self, locator: str | Locator, value: str, force: bool = False) -> None:
-		self.get_locator(locator).click(force=force)
+	def click_element(self, locator: str | Locator, value: str | None = None, **kwargs) -> None:
+		loc = self.get_locator(locator)
+		loc.click(**kwargs)
 
 	def click_and_wait_navigation(self, locator: str | Locator, value: str, timeout:Optional[int] = None) -> None:
 		with self.expect_navigation(timeout=timeout or self.timeout):
