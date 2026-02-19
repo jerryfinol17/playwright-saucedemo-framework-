@@ -17,14 +17,15 @@ class LoginPage(BasePage):
 		self.fill_input(self.PASSWORD_INPUT, password)
 		self.click_element(self.LOGIN_BUTTON, force= True)
 
-	def get_error_message(self) -> str:
+	def get_error_message_or_empty(self) -> str:
 		if self.is_visible(self.ERROR):
 			return self.get_text(self.ERROR).strip()
+		return ""
 
 	def is_error_visible(self) -> bool:
 		return self.is_visible(self.ERROR)
 
-	def is_login_sucessful(self) -> bool:
+	def is_login_ok(self) -> bool:
 		return "inventory.html" in self.page.url
 
 	def clear_login_fields(self) -> None:

@@ -1,9 +1,8 @@
 from playwright.sync_api import Page, Locator, expect, TimeoutError as PlaywrightTimeoutError
 from typing import Optional
 
-class BasePage(Page):
+class BasePage:
 	def __init__(self,page: Page):
-		super().__init__(page)
 		self.page = page
 		self.timeout = 15000
 
@@ -18,7 +17,7 @@ class BasePage(Page):
 		loc.click(**kwargs)
 
 	def click_and_wait_navigation(self, locator: str | Locator, value: str, timeout:Optional[int] = None) -> None:
-		with self.expect_navigation(timeout=timeout or self.timeout):
+		with self.page.expect_navigation(timeout=timeout or self.timeout):
 			self.click_element(locator)
 
 
@@ -39,9 +38,14 @@ class BasePage(Page):
 		assert current == expected_substring, f"{current} != {expected_substring}"
 
 	def assert_text_equals(self, locator: str | Locator, expected_text: str) -> None:
-		expect(self.get_text(locator)).to_have_text(expected_text)
+		loc = self.get_locator(locator)
+		expect(loc).to_have_text(expected_text)
 
 	def get_locator(self, locator: str| Locator) -> Locator:
 		if isinstance(locator, str):
 			return self.page.locator(locator)
 		return locator
+
+	def is_visible(self, locator: str | Locator) -> bool:
+		loc = self.get_locator(locator)
+		return loc.is_visible()
