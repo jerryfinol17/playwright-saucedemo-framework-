@@ -2,6 +2,7 @@ from playwright.sync_api import expect
 from pages.base_page import BasePage
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
+from pages.cart_page import CartPage
 from pages.config import CREDENTIALS
 
 def test_base_page_init(page):
@@ -32,3 +33,21 @@ def test_inventory_dummy(page):
 
     inventory.add_item_to_cart("Sauce Labs Backpack")
     assert inventory.get_cart_badge_count() == 1
+
+def test_cart_dummy(page):
+    login = LoginPage(page)
+    login.login("standard_user", "secret_sauce")
+    inventory = InventoryPage(page)
+    inventory.add_item_to_cart("Sauce Labs Backpack")
+    inventory.add_item_to_cart("Sauce Labs Bike Light")
+    inventory.click_element(inventory.SHOPPING_CART_LINK)
+    cart = CartPage(page)
+    assert cart.is_on_cart_page()
+    assert cart.get_title_text() == "Your Cart"
+    assert cart.get_cart_badge_count() == 2
+    names = cart.get_cart_item_names()
+    assert "Sauce Labs Backpack" in names
+    assert "Sauce Labs Bike Light" in names
+    assert cart.get_item_quantity("Sauce Labs Backpack") == 1
+    cart.remove_item_from_cart("Sauce Labs Bike Light")
+    assert cart.get_cart_badge_count() == 1
