@@ -1,6 +1,8 @@
 import pytest
-from playwright.sync_api import sync_playwright, Browser, Page
+from playwright.sync_api import sync_playwright, Browser, Page, expect
 from pages.config import BASE_URL, CREDENTIALS
+from pages.login_page import LoginPage
+from pages.inventory_page import InventoryPage
 
 BROWSERS_AND_DEVICES = [
     {"browser_type": "chromium", "device_name": None, "name": "chromium"},
@@ -10,6 +12,7 @@ BROWSERS_AND_DEVICES = [
     {"browser_type": "chromium", "device_name": "Pixel 5",   "name": "pixel5"},
 ]
 
+VALID_USERS = [ 'standard', 'problem', 'performance','error','visual']
 @pytest.fixture(scope="function", params=BROWSERS_AND_DEVICES, ids=lambda x: x["name"])
 def page(request) -> Page:
     config = request.param
@@ -44,6 +47,25 @@ def page(request) -> Page:
         browser.close()
         p.stop()
 
-@pytest.fixture(scope="function", params= list(CREDENTIALS.values()), ids= list(CREDENTIALS.keys()))
+
+@pytest.fixture(scope="function", params=list(CREDENTIALS.keys()), ids=lambda x: x)
 def test_user(request):
     return request.param
+
+@pytest.fixture(scope="function")
+def logged_in_page(page, test_user):
+    if test_user not in VALID_USERS:
+        pytest.skip(f"Skipping for user key '{test_user}' (not allowed for successful login)")
+
+    creds = CREDENTIALS[test_user]
+    username = creds["username"]
+    password = creds["password"]
+
+    login_page = LoginPage(page)
+    login_page.is_on_login_page()
+    login_page.login(username, password)
+
+    inventory_page = InventoryPage(page)
+    assert inventory_page.get_title_text() == "Products"
+
+    yield inventory_page

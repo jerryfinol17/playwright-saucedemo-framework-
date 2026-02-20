@@ -24,7 +24,10 @@ def test_login_work(page):
 
 def test_inventory_dummy(page):
     login = LoginPage(page)
-    login.login("standard_user", "secret_sauce")
+    user = CREDENTIALS["standard"]
+    assert login.is_on_login_page()
+    login.login(user["username"], user["password"])
+    assert login.is_login_ok()
 
     inventory = InventoryPage(page)
     assert inventory.is_on_inventory_page()
@@ -36,7 +39,8 @@ def test_inventory_dummy(page):
 
 def test_cart_dummy(page):
     login = LoginPage(page)
-    login.login("standard_user", "secret_sauce")
+    user = CREDENTIALS["standard"]
+    login.login(user["username"], user["password"])
     inventory = InventoryPage(page)
     inventory.add_item_to_cart("Sauce Labs Backpack")
     inventory.add_item_to_cart("Sauce Labs Bike Light")
@@ -51,3 +55,7 @@ def test_cart_dummy(page):
     assert cart.get_item_quantity("Sauce Labs Backpack") == 1
     cart.remove_item_from_cart("Sauce Labs Bike Light")
     assert cart.get_cart_badge_count() == 1
+
+def test_add_item_badge_updates(logged_in_page):
+    logged_in_page.add_item_to_cart("Sauce Labs Backpack")
+    assert logged_in_page.get_cart_badge_count() ==(1)
