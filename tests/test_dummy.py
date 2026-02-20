@@ -3,7 +3,8 @@ from pages.base_page import BasePage
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
 from pages.cart_page import CartPage
-from pages.config import CREDENTIALS
+from pages.checkout_page import CheckoutPage
+from pages.config import CREDENTIALS, DATA
 
 def test_base_page_init(page):
     base = BasePage(page)
@@ -59,3 +60,29 @@ def test_cart_dummy(page):
 def test_add_item_badge_updates(logged_in_page):
     logged_in_page.add_item_to_cart("Sauce Labs Backpack")
     assert logged_in_page.get_cart_badge_count() ==(1)
+
+
+def test_checkout_work(page):
+    login = LoginPage(page)
+    user = CREDENTIALS["standard"]
+    data = DATA["valid_checkout"]
+    inventory = InventoryPage(page)
+    cart = CartPage(page)
+    checkout = CheckoutPage(page)
+    login.login(user["username"], user["password"])
+    inventory.add_item_to_cart("Sauce Labs Bike Light")
+    inventory.add_item_to_cart("Sauce Labs Backpack")
+    inventory.click_element(inventory.SHOPPING_CART_LINK)
+    assert cart.is_on_cart_page()
+    names = cart.get_cart_item_names()
+    assert "Sauce Labs Bike Light" in names
+    assert "Sauce Labs Backpack" in names
+    cart.proceed_to_checkout()
+    checkout.is_on_checkout_page()
+    checkout.fill_personal_info(data["first_name"], data["last_name"], data["zip_code"])
+    checkout.continue_to_overview()
+    checkout.get_subtotal_text()
+    checkout.finish_purchase()
+    checkout.is_complete_page()
+    assert checkout.is_complete_page() is True
+

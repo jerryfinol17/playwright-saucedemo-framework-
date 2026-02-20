@@ -9,7 +9,7 @@ class CartPage(BasePage):
 	SHOPPING_CART_BADGE = '.shopping_cart_badge'
 	PRODUCT_NAME = '.inventory_item_name'
 	PRODUCT_PRICE = '.inventory_item_price'
-	CART_QUANTITY = '[data-test=item-quantity]'
+	CART_QUANTITY = '[data-test="item-quantity"]'
 	REMOVE_BTN = '[data-test^="remove-"]'
 
 	def __init__(self, page: Page):
