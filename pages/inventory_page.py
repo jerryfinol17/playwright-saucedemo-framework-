@@ -67,5 +67,13 @@ class InventoryPage(BasePage):
 				return
 		raise ValueError(f"Producto '{item_name}' no encontrado para remover")
 
+	def get_inventory_items_with_prices(self) -> dict[str, float]:
+		items = {}
+		for item_locator in self.page.locator(self.PRODUCT_ITEM).all():
+			name = item_locator.locator(self.PRODUCT_NAME).inner_text().strip()
+			price_str = item_locator.locator(self.PRODUCT_PRICE).inner_text().strip()
+			price = float(price_str.replace("$", "").strip())
+			items[name] = price
+		return items
 
 

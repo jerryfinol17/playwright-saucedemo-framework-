@@ -93,6 +93,14 @@ class CheckoutPage(BasePage):
                 names.append(name_locator.inner_text().strip())
         return names
 
+    def get_overview_items_with_prices(self) -> dict[str, float]:
+        items = {}
+        for item_locator in self.page.locator(self.CART_ITEM).all():
+            name = item_locator.locator(self.PRODUCT_NAME).inner_text().strip()
+            price_str = item_locator.locator(self.PRODUCT_PRICE).inner_text().strip()
+            price = float(price_str.replace("$", "").strip())
+            items[name] = price
+        return items
     def get_overview_item_count(self) -> int:
         return len(self.page.locator(self.CART_ITEM).all())
 
