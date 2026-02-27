@@ -65,8 +65,6 @@ class CheckoutPage(BasePage):
             return self.get_text(self.ERROR_MSG).strip()
         return ""
 
-    def continue_without_info(self):
-        self.click_element(self.CONTINUE_BTN)
 
     def is_error_visible(self) -> bool:
         return self.is_visible(self.ERROR_MSG)

@@ -18,7 +18,7 @@ def test_saucedemo_title(page):
 def test_login_work(page):
     login = LoginPage(page)
     user = CREDENTIALS["standard"]
-    assert login.is_on_login_page()
+    assert login.is_on_base_page()
     login.login(user["username"], user["password"])
     assert login.is_login_ok()
 
@@ -26,7 +26,7 @@ def test_login_work(page):
 def test_inventory_dummy(page):
     login = LoginPage(page)
     user = CREDENTIALS["standard"]
-    assert login.is_on_login_page()
+    assert login.is_on_base_page()
     login.login(user["username"], user["password"])
     assert login.is_login_ok()
 

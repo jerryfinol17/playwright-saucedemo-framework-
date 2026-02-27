@@ -10,6 +10,11 @@ CREDENTIALS = {
     "performance": {"username": "performance_glitch_user", "password": "secret_sauce"},
 	"error": {"username": "error_user", "password": "secret_sauce"},
 	"visual": {"username": "visual_user", "password": "secret_sauce"},
+    "invalid_user" : { "username": "ElPePe", "password": "secret_sauce"},
+    "invalid_password" : { "username": "standard_user", "password": "QuesoConArroz"},
+    "blank_user" : { "username": "", "password": "secret_sauce"},
+    "blank_password" : { "username": "standard_user", "password": ""},
+    "all_blank": { "username": "", "password": ""},
 }
 
 

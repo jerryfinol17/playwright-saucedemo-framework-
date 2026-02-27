@@ -5,47 +5,52 @@ from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
 
 BROWSERS_AND_DEVICES = [
-    {"browser_type": "chromium", "device_name": None, "name": "chromium"},
-    {"browser_type": "firefox",  "device_name": None, "name": "firefox"},
-    {"browser_type": "webkit",   "device_name": None, "name": "webkit"},
-    {"browser_type": "chromium", "device_name": "iPhone 13", "name": "iphone13"},
-    {"browser_type": "chromium", "device_name": "Pixel 5",   "name": "pixel5"},
+    {"name": "chromium", "browser_type": "chromium", "channel": None, "device_name": None},
+    {"name": "msedge",   "browser_type": "chromium", "channel": "msedge", "device_name": None},
+    {"name": "webkit",   "browser_type": "webkit",   "channel": None,     "device_name": None},
+    {"name": "iphone13", "browser_type": "chromium", "channel": None,     "device_name": "iPhone 13"},
+    {"name": "pixel5",   "browser_type": "chromium", "channel": None,     "device_name": "Pixel 5"},
 ]
 
 @pytest.fixture(scope="function", params=BROWSERS_AND_DEVICES, ids=lambda x: x["name"])
 def page(request) -> Page:
     config = request.param
     browser_type = config["browser_type"]
+    channel = config.get("channel")
     device_name = config["device_name"]
-
-    p = sync_playwright().start()
+    pw = sync_playwright().start()
     try:
         if browser_type == "chromium":
-            browser: Browser = p.chromium.launch(headless=False, slow_mo=300)
-        elif browser_type == "firefox":
-            browser = p.firefox.launch(headless=False, slow_mo=300)
+            browser: Browser = pw.chromium.launch(
+                headless=True,
+                slow_mo=300,
+                channel=channel
+            )
         elif browser_type == "webkit":
-            browser = p.webkit.launch(headless=False, slow_mo=300)
+            browser: Browser = pw.webkit.launch(headless=True, slow_mo=300)
         else:
-            raise ValueError(f"Browser desconocido: {browser_type}")
-
+            raise ValueError(f"Browser no soportado: {browser_type}")
         context_kwargs = {}
         if device_name:
-            device = p.devices[device_name]
+            device = pw.devices[device_name]
             context_kwargs.update(device)
 
         context = browser.new_context(**context_kwargs)
-
         page: Page = context.new_page()
+
         page.goto(BASE_URL)
         page.wait_for_load_state("domcontentloaded")
 
         yield page
-    finally:
-        context.close()
-        browser.close()
-        p.stop()
 
+    finally:
+        if 'page' in locals():
+            page.close()
+        if 'context' in locals():
+            context.close()
+        if 'browser' in locals():
+            browser.close()
+        pw.stop()
 
 
 @pytest.fixture(scope="function")
@@ -56,7 +61,7 @@ def logged_in_page(page):
     password = creds["password"]
 
     login_page = LoginPage(page)
-    login_page.is_on_login_page()
+    login_page.is_on_base_page()
     login_page.login(username, password)
 
     inventory_page = InventoryPage(page)

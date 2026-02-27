@@ -8,6 +8,8 @@ class LoginPage(BasePage):
 	ERROR = '[data-test="error"]'
 	INVENTORY_TITLE = '.title'
 	SWAG_LABS_LOGO = '.login_logo'
+	BURGER_MENU_BUTTON = '#react-burger-menu-btn'
+	LOGOUT_BUTTON = '[data-test="logout-sidebar-link"]'
 
 	def __init__(self, page : Page) -> None:
 		super().__init__(page)
@@ -32,8 +34,11 @@ class LoginPage(BasePage):
 		self.page.locator(self.USERNAME_INPUT).clear()
 		self.page.locator(self.PASSWORD_INPUT).clear()
 
-	def is_on_login_page(self) -> bool:
+	def is_on_base_page(self) -> bool:
 		return self.is_visible(self.SWAG_LABS_LOGO)
+
+	def is_inventory_title_visible(self) -> bool:
+		return self.is_visible(self.INVENTORY_TITLE)
 
 
 
