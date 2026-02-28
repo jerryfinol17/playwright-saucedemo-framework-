@@ -11,6 +11,7 @@ class InventoryPage(BasePage):
 	PRODUCT_ITEM = '.inventory_item'
 	PRODUCT_NAME = '.inventory_item_name'
 	PRODUCT_PRICE = '.inventory_item_price'
+	PRODUCT_DESCRIPTION = '[data-test="inventory-item-desc"]'
 
 	def __init__(self, page: Page):
 		super().__init__(page)
@@ -37,6 +38,14 @@ class InventoryPage(BasePage):
 			name = item.locator(self.PRODUCT_NAME).inner_text().strip()
 			if name == product_name:
 				return name
+		return ""
+	def get_product_description(self, product_name: str) -> str:
+
+		items = self.page.locator(self.PRODUCT_ITEM).all()
+		for item in items:
+			name = item.locator(self.PRODUCT_NAME).inner_text().strip()
+			if name == product_name:
+				return item.locator(self.PRODUCT_DESCRIPTION).inner_text().strip()
 		return ""
 
 	def get_product_price(self, product_name: str) -> str:
@@ -77,3 +86,19 @@ class InventoryPage(BasePage):
 		return items
 
 
+	def is_remove_button_visible(self, item_name: str) -> bool:
+		items = self.page.locator(self.PRODUCT_ITEM).all()
+		for item in items:
+			name = item.locator(self.PRODUCT_NAME).inner_text().strip()
+			if name == item_name:
+				remove_button = item.locator('[data-test^="remove-"]')
+				return self.is_visible(remove_button)
+		return False
+	def add_item_is_visible(self, item_name: str) -> bool:
+		items = self.page.locator(self.PRODUCT_ITEM).all()
+		for item in items:
+			name = item.locator(self.PRODUCT_NAME).inner_text().strip()
+			if name == item_name:
+				add_button = item.locator('[data-test^="add-to-cart-"]')
+				return self.is_visible(add_button)
+		return False

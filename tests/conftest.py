@@ -22,7 +22,7 @@ def page(request) -> Page:
     try:
         if browser_type == "chromium":
             browser: Browser = pw.chromium.launch(
-                headless=True,
+                headless=False,
                 slow_mo=300,
                 channel=channel
             )
