@@ -39,8 +39,3 @@ class LoginPage(BasePage):
 
 	def is_inventory_title_visible(self) -> bool:
 		return self.is_visible(self.INVENTORY_TITLE)
-
-
-
-
-

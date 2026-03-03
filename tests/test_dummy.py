@@ -86,3 +86,18 @@ def test_checkout_work(page):
     checkout.is_complete_page()
     assert checkout.is_complete_page() is True
 
+def test_sorting_name(logged_in_page):
+    inventory = logged_in_page
+    inventory.select_sort_option("za")
+    names = inventory.get_name_list()
+    expected = sorted(names, reverse=True)
+    assert names == expected, f'Z to A Fallo: {names} != {expected}'
+
+def test_sorting_price(logged_in_page):
+    inventory = logged_in_page
+    inventory.select_sort_option("lohi")
+    prices = inventory.get_price_list()
+    expected = sorted(prices)
+    assert prices == expected, f'Lohi to A Fallo: {prices} != {expected}'
+
+

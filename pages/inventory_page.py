@@ -102,3 +102,14 @@ class InventoryPage(BasePage):
 				add_button = item.locator('[data-test^="add-to-cart-"]')
 				return self.is_visible(add_button)
 		return False
+	def select_sort_option(self, value: str) -> None:
+		self.page.locator(".product_sort_container").select_option(value)
+
+	def get_name_list(self) -> list[str]:
+		elements = self.page.locator(self.PRODUCT_NAME).all()
+		return [el.inner_text().strip() for el in elements]
+
+	def get_price_list(self) -> list[float]:
+		elements = self.page.locator(self.PRODUCT_PRICE).all()
+		return [float(el.inner_text().replace("$", "").strip()) for el in elements]
+
