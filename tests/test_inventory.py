@@ -1,3 +1,5 @@
+import pytest
+
 from pages.cart_page import CartPage
 from pages.inventory_page import InventoryPage
 
@@ -65,3 +67,16 @@ def test_description(logged_in_page) -> None:
 	inventory = logged_in_page
 	inventory.get_product_description("Sauce Labs Backpack")
 	assert "Sly Pack" in inventory.get_product_description("Sauce Labs Backpack")
+
+
+@pytest.mark.parametrize("name, brief_description", [("Sauce Labs Backpack"," Sly Pack")
+	,("Sauce Labs Bike Light", "AAA battery included"),
+	("Sauce Labs Bolt T-Shirt", "American Apparel"),
+	("Sauce Labs Fleece Jacket", "quarter-zip fleece jacket"),
+	("Sauce Labs Onesie", " two-needle hemmed"),
+	("Test.allTheThings() T-Shirt (Red)","Super-soft and comfy")])
+def test_description_in_all_products(logged_in_page, name, brief_description) -> None:
+	inventory = logged_in_page
+	assert brief_description in inventory.get_product_description(name)
+
+
