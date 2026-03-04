@@ -1,6 +1,8 @@
 import pytest
 from pages.cart_page import CartPage
 from pages.inventory_page import InventoryPage
+from pages.config import CREDENTIALS
+from pages.login_page import LoginPage
 
 
 def test_add_one_product(logged_in_page) -> None:
@@ -217,3 +219,90 @@ def test_sorting_with_multiple_items_and_removals(logged_in_page):
 def test_about_btn_work(logged_in_page):
     inventory = logged_in_page
     assert inventory.about_btn_work() is True
+
+@pytest.mark.xfail(reason="Expected bugs in problem_user: limited add, no remove from inventory")
+def test_add_remove_with_problem_user(page):
+    login = LoginPage(page)
+    creds = CREDENTIALS['problem']
+    login.login(creds['username'], creds['password'])
+    inventory = InventoryPage(page)
+    assert inventory.is_on_inventory_page() == True
+    all_items = [
+        "Sauce Labs Backpack",
+        "Sauce Labs Bike Light",
+        "Sauce Labs Bolt T-Shirt",
+        "Sauce Labs Fleece Jacket",
+        "Sauce Labs Onesie",
+        "Test.allTheThings() T-Shirt (Red)"
+    ]
+    addable_items = ["Sauce Labs Backpack", "Sauce Labs Bike Light", "Sauce Labs Onesie"]
+    non_addable_items = [item for item in all_items if item not in addable_items]
+    for item in all_items:
+        try:
+            inventory.add_item_to_cart(item)
+            assert inventory.is_remove_button_visible(item) is True, f"Failed to switch to Remove for '{item}'"
+            print(f"Successfully added '{item}' to cart (expected for addable ones)")
+        except AssertionError:
+            print(f"Failed to add '{item}' to cart (expected for non-addable ones)")
+            assert item in non_addable_items, f"Unexpected fail adding '{item}'"
+
+    assert inventory.get_cart_badge_count() == 3
+    for item in addable_items:
+        try:
+            inventory.remove_item_from_cart(item)
+            assert inventory.add_item_is_visible(item) is True, f"Failed to switch to Remove for '{item}'"
+            print(f"Unexpectedly removed '{item}' should fail!")
+        except AssertionError:
+            print(f"Failed to remove '{item}' (expected bug: remove doesn't work from inventory)")
+            assert inventory.is_remove_button_visible(item) is True, f"Button should still be Remove for '{item}' after failed remove"
+    assert inventory.get_cart_badge_count() == 3
+    inventory.click_element(InventoryPage.SHOPPING_CART_LINK)
+    cart = CartPage(page)
+    assert cart.get_cart_item_names() == addable_items
+
+
+@pytest.mark.xfail(reason="Expected bugs in visual_user: sorting always breaks the data for prices")
+def test_sorting_in_visual_user(page):
+    login = LoginPage(page)
+    creds = CREDENTIALS['visual']
+    login.login(creds['username'], creds['password'])
+    inventory = InventoryPage(page)
+    assert inventory.is_on_inventory_page() is True
+    initial_data = inventory.get_inventory_items_with_prices()
+    initial_prices_list = inventory.get_price_list()
+    sort_options = ["az", "za", "lohi", "hilo"]
+    for opt in sort_options:
+        print(f"\n=== Testing sort: {opt.upper()} ===")
+        inventory.select_sort_option(opt)
+        current_data = inventory.get_inventory_items_with_prices()
+        current_prices_list = inventory.get_price_list()
+        initial_keys = set(initial_data.keys())
+        current_keys = set(current_data.keys())
+        if initial_keys != current_keys:
+            missing = initial_keys - current_keys
+            extra = current_keys - initial_keys
+            if missing:
+                print(f"  → Items LOST after sort: {missing}")
+            if extra:
+                print(f"  → Extra items appeared: {extra}")
+        changes_found = False
+        print("  Cambios detectados en precios:")
+        for name in initial_keys:
+            initial_price = initial_data.get(name, "N/A")
+            current_price = current_data.get(name, "N/A")
+            if initial_price != current_price:
+                changes_found = True
+                print(f"    - {name}: {initial_price} → {current_price}  (has changed!)")
+
+        if not changes_found:
+            print("    (Ningún precio cambió en este sort – inesperado si es bug)")
+        if opt in ["lohi", "hilo"]:
+            expected_sorted_prices = sorted(initial_prices_list) if opt == "lohi" else sorted(initial_prices_list,
+                                                                                              reverse=True)
+            if current_prices_list == expected_sorted_prices:
+                print("  → Precios se ordenaron correctamente (NO esperado en visual_user)")
+            else:
+                print("  → Precios NO se ordenaron correctamente (expected bug)")
+                print(f"     Lista actual:   {current_prices_list}")
+                print(f"     Lista esperada: {expected_sorted_prices}")
+    print("\nTest finalizado. En visual_user se esperan cambios/rupturas en precios con cada sort.")
