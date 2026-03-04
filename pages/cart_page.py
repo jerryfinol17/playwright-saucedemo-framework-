@@ -6,6 +6,8 @@ class CartPage(BasePage):
 	CONTINUE_SHOPPING_BTN = '[data-test=continue-shopping]'
 	CHECKOUT_BTN = '[data-test=checkout]'
 	CART_ITEM = '[data-test="inventory-item"]'
+	BURGER_MENU_BUTTON = '#react-burger-menu-btn'
+	ALL_ITEMS_LINK = '[data-test=inventory-sidebar-link]'
 	SHOPPING_CART_BADGE = '.shopping_cart_badge'
 	PRODUCT_NAME = '.inventory_item_name'
 	PRODUCT_PRICE = '.inventory_item_price'

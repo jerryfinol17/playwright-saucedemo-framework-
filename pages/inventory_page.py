@@ -6,6 +6,8 @@ class InventoryPage(BasePage):
 	SHOPPING_CART_LINK = '[data-test="shopping-cart-link"]'
 	SHOPPING_CART_BADGE = '.shopping_cart_badge'
 	BURGER_MENU_BUTTON = '#react-burger-menu-btn'
+	ABOUT_LINK = '[data-test="about-sidebar-link"]'
+	RESET_APP_LINK = '[data-test="reset-sidebar-link"]'
 	TITLE = '[data-test="title"]'
 	SORT_DROPDOWN = '[data-test="product_sort_container"]'
 	PRODUCT_ITEM = '.inventory_item'
@@ -18,6 +20,11 @@ class InventoryPage(BasePage):
 
 	def is_on_inventory_page(self) -> bool:
 		return 'inventory.html' in self.page.url
+
+	def about_btn_work(self) -> bool:
+		self.click_element(InventoryPage.BURGER_MENU_BUTTON)
+		self.click_element(InventoryPage.ABOUT_LINK)
+		return 'saucelabs.com' in self.page.url
 
 	def primary_header_is_visible(self) -> bool:
 		return self.is_visible(self.PRIMARY_HEADER)

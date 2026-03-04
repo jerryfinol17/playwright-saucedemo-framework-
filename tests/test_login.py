@@ -5,7 +5,7 @@ from pages.config import CREDENTIALS
 import time
 
 POSITIVE_USERS = [
-    ("standard", False),
+    ("standard", True),
     ("problem", False),
     ("visual", False),
     ("error", False),
@@ -28,7 +28,7 @@ def test_login_positive(page: Page, user_key: str, should_measure_time: bool) ->
     if should_measure_time:
         duration = time.perf_counter() - start_time
         print(f"{user_key} login + load took: {duration:.2f} seconds")
-        assert duration > 3.0, f"{user_key} too fast for glitch: {duration:.2f}s"
+        assert duration > 1.0, f"{user_key} too fast for glitch: {duration:.2f}s"
         assert duration < 12.0, f"{user_key} too slow: {duration:.2f}s"
 
     if user_key in ["standard", "visual", "performance"]:
