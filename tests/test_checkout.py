@@ -20,8 +20,7 @@ def test_checkout_happy_path(logged_in_page):
     assert cart.get_cart_badge_count() == len(items_to_add)
     cart.proceed_to_checkout()
     checkout = CheckoutPage(inventory.page)
-    checkout.is_on_checkout_page()
-    assert 'checkout-step-one.html' in inventory.page.url
+    assert checkout.is_on_checkout_page() is True
     data = DATA['valid_checkout']
     checkout.fill_personal_info(data['first_name'], data['last_name'],data['zip_code'])
     checkout.continue_to_overview()
@@ -37,7 +36,6 @@ def test_checkout_happy_path(logged_in_page):
     expected_total = (expected_subtotal + expected_tax)
     assert abs(total - expected_total) < 0.01
     checkout.finish_purchase()
-    checkout.is_complete_page()
     assert checkout.is_complete_page() is True
     checkout.back_to_products()
     assert inventory.is_on_inventory_page() is True
@@ -114,7 +112,10 @@ def test_checkout_without_items_on_cart(logged_in_page):
     assert checkout.get_subtotal() == 0.00
     checkout.finish_purchase()
     checkout.is_complete_page()
-    assert checkout.is_complete_page() is True
+    assert checkout.is_complete_page() is False
+
+    """This tests should fail because in a regular shopping web you can't make the checkout\\
+     without items in the shopping cart, but this page let you make the checkout."""
 
 def test_items_on_overview_are_correct(logged_in_page):
     inventory = logged_in_page
