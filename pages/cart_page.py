@@ -37,12 +37,9 @@ class CartPage(BasePage):
 			names.append(name)
 		return names
 
-	def get_cart_item_prices(self) -> list[str]:
-		prices = []
-		for item in self.page.locator(self.CART_ITEM).all():
-			price = item.locator(self.PRODUCT_PRICE).inner_text().strip()
-			prices.append(price)
-		return prices
+	def get_cart_item_prices(self) -> list[float]:
+		elements = self.page.locator(self.PRODUCT_PRICE).all()
+		return [float(el.inner_text().replace("$", "").strip()) for el in elements]
 
 	def get_item_quantity(self, item_name: str) -> int:
 		items = self.page.locator(self.CART_ITEM).all()
