@@ -162,6 +162,7 @@ def test_reset_app_full_happy_path(logged_in_page):
     assert inventory.get_cart_badge_count() == 3
     inventory.click_element(InventoryPage.BURGER_MENU_BUTTON)
     inventory.click_element(InventoryPage.RESET_APP_LINK)
+    inventory.click_element(InventoryPage.CROSS_BURGER_BUTTON)
     assert inventory.get_cart_badge_count() == 0, f'Reset does not change status on cart badge'
     inventory.click_element(InventoryPage.SHOPPING_CART_LINK)
     cart = CartPage(inventory.page)

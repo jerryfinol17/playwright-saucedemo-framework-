@@ -6,6 +6,7 @@ class InventoryPage(BasePage):
 	SHOPPING_CART_LINK = '[data-test="shopping-cart-link"]'
 	SHOPPING_CART_BADGE = '.shopping_cart_badge'
 	BURGER_MENU_BUTTON = '#react-burger-menu-btn'
+	CROSS_BURGER_BUTTON = '#react-burger-cross-btn'
 	ABOUT_LINK = '[data-test="about-sidebar-link"]'
 	RESET_APP_LINK = '[data-test="reset-sidebar-link"]'
 	TITLE = '[data-test="title"]'
