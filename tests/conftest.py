@@ -18,6 +18,7 @@ def page(request) -> Page:
     browser_type = config["browser_type"]
     channel = config.get("channel")
     device_name = config["device_name"]
+    record_video = request.node.get_closest_marker("record_video") is not None
     pw = sync_playwright().start()
     try:
         if browser_type == "chromium":
@@ -36,8 +37,12 @@ def page(request) -> Page:
             context_kwargs.update(device)
             viewport = device.get("viewport")
             context_kwargs.update(viewport)
-        context = browser.new_context(**context_kwargs,
-                                      record_video_dir="videos/")
+
+        video_kwargs = {}
+        if record_video:
+            video_kwargs = {"record_video_dir": "videos/",
+                "record_video_size": {"width": 1280, "height": 720}}
+        context = browser.new_context(**context_kwargs, **video_kwargs)
         page: Page = context.new_page()
 
         page.goto(BASE_URL)

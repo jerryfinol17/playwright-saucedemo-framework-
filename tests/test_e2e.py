@@ -6,6 +6,7 @@ from pages.config import DATA
 import pytest
 
 @pytest.mark.e2e
+@pytest.mark.record_video
 def test_e2e_happy_path(logged_in_page):
 	inventory = logged_in_page
 	items_prices= inventory.get_inventory_items_with_prices()
