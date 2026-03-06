@@ -52,3 +52,4 @@ def test_e2e_happy_path(logged_in_page):
 	login.click_element(LoginPage.BURGER_MENU_BUTTON)
 	login.click_element(LoginPage.LOGOUT_BUTTON)
 	assert login.is_on_base_page() is True
+	print("Video path:", inventory.page.video.path() if inventory.page.video else "No video")

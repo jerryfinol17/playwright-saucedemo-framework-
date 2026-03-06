@@ -1,5 +1,5 @@
 import pytest
-from playwright.sync_api import sync_playwright, Browser, Page, expect
+from playwright.sync_api import sync_playwright, Browser, Page
 from pages.config import BASE_URL, CREDENTIALS
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
@@ -34,8 +34,10 @@ def page(request) -> Page:
         if device_name:
             device = pw.devices[device_name]
             context_kwargs.update(device)
-
-        context = browser.new_context(**context_kwargs)
+            viewport = device.get("viewport")
+            context_kwargs.update(viewport)
+        context = browser.new_context(**context_kwargs,
+                                      record_video_dir="videos/")
         page: Page = context.new_page()
 
         page.goto(BASE_URL)
