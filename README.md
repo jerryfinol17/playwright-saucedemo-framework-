@@ -104,6 +104,11 @@ Overall project: ~65%
 
 Coverage prioritizes the pages/ module (interactions & assertions). Tests & fixtures naturally lower the global %.
 
+
+## Demo
+
+[e2e.webm](videos/e2e.webm)
+
 ## About & Contact
 
 Hi! I'm **Jerry Finol** (@GordoRelig3d), a QA Junior from Venezuela currently based in the US.
@@ -122,5 +127,3 @@ If this repo saves you time, inspires an idea, or you want to chat about:
 Feel free to **DM me on X** → [@GordoRelig3d](https://x.com/GordoRelig3d)
 
 ¡Gracias por pasar por acá y que los tests siempre pasen en verde! 💚
-
-[e2e.webm](videos/e2e.webm)
