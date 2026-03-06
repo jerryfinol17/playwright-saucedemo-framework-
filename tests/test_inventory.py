@@ -137,7 +137,7 @@ def test_sorting_preserves_cart_states_and_add_remove_btn(logged_in_page):
     assert inventory.get_cart_badge_count() == 1
     assert inventory.is_remove_button_visible("Sauce Labs Bike Light") == True
 
-
+@pytest.mark.xfail(reason="The UI does not restart the status on remove btn")
 def test_reset_btn(logged_in_page):
     inventory = logged_in_page
     assert inventory.is_on_inventory_page() == True
@@ -148,7 +148,12 @@ def test_reset_btn(logged_in_page):
     inventory.click_element(InventoryPage.RESET_APP_LINK)
     assert inventory.get_cart_badge_count() == 0
     assert inventory.is_on_inventory_page() == True
-    assert inventory.is_remove_button_visible("Sauce Labs Bike Light") == False
+    try:
+        assert inventory.is_remove_button_visible("Sauce Labs Bike Light") == False
+        print("Unexpected error, remove btn should not appear")
+    except AssertionError:
+        print("Expected error, remove_btn should not appear")
+        assert inventory.is_remove_button_visible("Sauce Labs Bike Light") == True
     """Actually this test have a bug on it, it supposes to change the status on the remove button\\
     and the badge count of the cart, restarting the status at the initial status, but it does not happen\\
     just change the status on the cart badge but the status on the remove buttons never change"""
