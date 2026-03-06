@@ -4,7 +4,7 @@
 [![Playwright](https://img.shields.io/badge/Playwright-1.40+-45ba75?logo=playwright)](https://playwright.dev/python/)
 [![pytest](https://img.shields.io/badge/pytest-9.0+-blueviolet)](https://docs.pytest.org/)
 [![Coverage](https://img.shields.io/badge/coverage-70%25-success?logo=Coverage.py&logoColor=white)](https://coverage.readthedocs.io/) 
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://opensource.org/licenses/MIT)
 End-to-End (E2E) automation framework for the [Sauce Demo](https://www.saucedemo.com/) demo e-commerce application, built with **Playwright** (synchronous API), **pytest**, and **Page Object Model (POM)**.
 
 This project demonstrates production-grade test automation practices: clean modular structure, reusable fixtures, parameterized tests, handling of flaky behavior, meaningful code coverage, and CI/CD readiness.
