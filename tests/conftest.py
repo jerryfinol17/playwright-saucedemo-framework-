@@ -35,13 +35,10 @@ def page(request) -> Page:
         if device_name:
             device = pw.devices[device_name]
             context_kwargs.update(device)
-            viewport = device.get("viewport")
-            context_kwargs.update(viewport)
 
         video_kwargs = {}
         if record_video:
-            video_kwargs = {"record_video_dir": "videos/",
-                "record_video_size": {"width": 1280, "height": 720}}
+            video_kwargs = {"record_video_dir": "videos/"}
         context = browser.new_context(**context_kwargs, **video_kwargs)
         page: Page = context.new_page()
 
