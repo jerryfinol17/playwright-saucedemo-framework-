@@ -1,4 +1,4 @@
-name: CI - Playwright Tests & Coverage
+name: CI - Playwright Sauce Demo Tests
 
 on:
   push:
@@ -8,14 +8,13 @@ on:
 
 jobs:
   test:
-    name: Test on Python ${{ matrix.python-version }} | ${{ matrix.browser }}
+    name: Tests on Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         python-version: ['3.11', '3.12']
-        browser: [chromium, firefox, webkit]
 
     steps:
       - name: Checkout code
@@ -32,21 +31,19 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
+          restore-keys: ${{ runner.os }}-playwright-
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Playwright browsers & deps
+      - name: Install Playwright browsers & system deps
         run: python -m playwright install --with-deps
 
       - name: Run tests with coverage
         run: |
           pytest \
-            --browser ${{ matrix.browser }} \
             --cov=pages \
             --cov-report=xml:coverage.xml \
             --cov-report=html:htmlcov \
@@ -55,20 +52,19 @@ jobs:
             --video retain-on-failure \
             --screenshot only-on-failure
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
           fail_ci_if_error: true
           verbose: true
-          env_vars: PYTHON,BROWSER
 
-      - name: Upload Playwright traces & reports (always)
+      - name: Upload artifacts (traces, reports, coverage)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-artifacts-${{ matrix.python-version }}-${{ matrix.browser }}
+          name: artifacts-python-${{ matrix.python-version }}
           path: |
             test-results/
             htmlcov/
@@ -76,11 +72,11 @@ jobs:
             coverage.xml
           retention-days: 7
 
-      - name: Upload video/screenshots if failed
+      - name: Upload failure media (videos/screenshots)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: failure-artifacts-${{ matrix.python-version }}-${{ matrix.browser }}
+          name: failure-media-python-${{ matrix.python-version }}
           path: |
             videos/
             screenshots/
