@@ -94,7 +94,8 @@ Cross-browser run:
 pytest --browser chromium --browser firefox --browser webkit
 ```
 Useful dev flags:
-```bash--headed, --slowmo 500, --screenshot only-on-failure, --video retain-on-failure
+```bash
+--headed, --slowmo 500, --screenshot only-on-failure, --video retain-on-failure
 ```
 ##Current Coverage (March 2026)
 pages/ (core business logic): 70%  
