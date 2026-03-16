@@ -135,7 +135,11 @@ def test_sorting_preserves_cart_states_and_add_remove_btn(logged_in_page):
     expected = sorted(names)
     assert names == expected, f'Z to A Fallo: {names} != {expected}'
     assert inventory.get_cart_badge_count() == 1
-    assert inventory.is_remove_button_visible("Sauce Labs Bike Light") == True
+    inventory.remove_item_from_cart("Sauce Labs Bike Light")
+    inventory.select_sort_option("az")
+    inventory.select_sort_option("za")
+    assert names == expected, f'Z to A Fallo: {names} != {expected}'
+    assert inventory.add_item_is_visible("Sauce Labs Bike Light") == True
 
 @pytest.mark.xfail(reason="The UI does not restart the status on remove btn")
 def test_reset_btn(logged_in_page):
