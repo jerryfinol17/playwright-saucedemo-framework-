@@ -10,7 +10,7 @@ class InventoryPage(BasePage):
 	ABOUT_LINK = '[data-test="about-sidebar-link"]'
 	RESET_APP_LINK = '[data-test="reset-sidebar-link"]'
 	TITLE = '[data-test="title"]'
-	SORT_DROPDOWN = '[data-test="product_sort_container"]'
+	SORT_DROPDOWN = '.product_sort_container'
 	PRODUCT_ITEM = '.inventory_item'
 	PRODUCT_NAME = '.inventory_item_name'
 	PRODUCT_PRICE = '.inventory_item_price'
@@ -111,7 +111,7 @@ class InventoryPage(BasePage):
 				return self.is_visible(add_button)
 		return False
 	def select_sort_option(self, value: str) -> None:
-		self.page.locator(".product_sort_container").select_option(value)
+		self.page.locator(self.SORT_DROPDOWN).select_option(value)
 
 	def get_name_list(self) -> list[str]:
 		elements = self.page.locator(self.PRODUCT_NAME).all()
