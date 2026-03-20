@@ -36,7 +36,7 @@ Python-Playwright-Saucedemo-Pom-Framework/
 ### Quick Start
 
 ```bash
-git clone https://github.com/jerryfinol17/Python-Playwright-Saucedemo-Pom-Framework.git
+git clone https://github.com/jerryfinol17/Python-Playwright-Saucedemo-Pom-Framework
 cd Python-Playwright-Saucedemo-Pom-Framework
 pip install -r requirements.txt
 playwright install --with-deps
