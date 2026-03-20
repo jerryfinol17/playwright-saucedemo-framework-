@@ -1,129 +1,69 @@
-# Playwright Sauce Demo Framework
+# 🛡️ Python Playwright SauceDemo POM Framework
 
-[![Python](https://img.shields.io/badge/python-3.9+-blue)](https://www.python.org/)
-[![Playwright](https://img.shields.io/badge/Playwright-1.40+-45ba75?logo=playwright)](https://playwright.dev/python/)
-[![pytest](https://img.shields.io/badge/pytest-9.0+-blueviolet)](https://docs.pytest.org/)
-[![Coverage](https://img.shields.io/badge/coverage-70%25-success?logo=Coverage.py&logoColor=white)](https://coverage.readthedocs.io/) 
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Playwright](https://img.shields.io/badge/Playwright-1.45+-45ba75?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/python/)
+[![pytest](https://img.shields.io/badge/pytest-8.0+-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
+[![Coverage](https://img.shields.io/badge/Coverage-70%25_pages-success?style=for-the-badge&logo=coverage.py)](https://coverage.readthedocs.io/)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?style=for-the-badge&logo=github)](https://github.com/jerryfinol17/Python-Playwright-Saucedemo-Pom-Framework/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](https://opensource.org/licenses/MIT)
-End-to-End (E2E) automation framework for the [Sauce Demo](https://www.saucedemo.com/) demo e-commerce application, built with **Playwright** (synchronous API), **pytest**, and **Page Object Model (POM)**.
 
-This project demonstrates production-grade test automation practices: clean modular structure, reusable fixtures, parameterized tests, handling of flaky behavior, meaningful code coverage, and CI/CD readiness.
+**Production-grade End-to-End automation framework** built with **Playwright (Sync)** + **pytest** + **clean Page Object Model**.  
 
-## Features
+Designed and implemented to demonstrate the exact skills companies and clients look for in a QA Automation Engineer: maintainable architecture, rock-solid stability, real coverage focus, and immediate CI/CD readiness.
 
-- Cross-browser testing support (Chromium, Firefox, WebKit) via pytest fixtures
-- Complete Page Object Model (BasePage + dedicated pages for Login, Inventory, Cart, Checkout)
-- Full coverage of Sauce Demo test users: standard_user, locked_out_user, problem_user, performance_glitch_user, visual_user, error_user, plus invalid credentials
-- Comprehensive scenarios:
-  - Login (positive/negative, locked out, performance glitch, visual issues, logout)
-  - Inventory (add/remove items, cart badge sync, 4 sorting options, reset app state, item descriptions, known bugs with @xfail)
-  - Cart (add/remove consistency, quantity checks, empty cart validation)
-  - Checkout (happy path with 8% tax calculation, required fields validation (parametrized), cancel at each step, subtotal/tax/total assertions, checkout without items – noted as known site bug)
-  - Full E2E journeys (add items → cart → checkout → order complete → back home → logout)
+### ✨ Key Highlights (what makes this repo stand out)
+- ✅ Full **Page Object Model** with `BasePage` inheritance – 100% reusable and scalable  
+- ✅ Cross-browser out-of-the-box (Chromium, Firefox, WebKit)  
+- ✅ All 7 SauceDemo users covered + invalid credentials + edge cases  
+- ✅ Complete business flows: Login ↔ Inventory ↔ Cart ↔ Checkout ↔ Order success + Logout  
+- ✅ Smart handling of known site bugs with `@xfail` (shows I understand real-world testing)  
+- ✅ Automatic screenshots + video recording on failure  
+- ✅ Prioritized coverage **70% in pages/** (the part that actually matters)  
+- ✅ GitHub Actions CI pipeline already configured and ready  
 
-## Project Structure
+### 📁 Project Structure
+```bash
+Python-Playwright-Saucedemo-Pom-Framework/
+├── pages/                  # Core business logic (POM)
+├── tests/                  # 8 well-organized test modules + fixtures
+├── videos/                 # ✅ e2e.webm demo included
+├── screenshots/            # Auto-generated on failure
+├── .github/workflows/ci.yml # CI pipeline (active)
+├── pytest.ini, .coveragerc, requirements.txt, coverage.xml
+└── Full E2E + parametrized + smoke tests
 
-```text
-playwright-saucedemo-framework/
-├── pages/                          # Page Object Model implementation
-│   ├── __init__.py                 # Makes pages importable as module
-│   ├── base_page.py                # Common methods & utilities
-│   ├── cart_page.py
-│   ├── checkout_page.py
-│   ├── config.py                   # Constants: BASE_URL, users credentials, checkout test data
-│   ├── inventory_page.py
-│   └── login_page.py
-├── tests/                          # All test files & fixtures
-│   ├── conftest.py                 # Global fixtures: multi-browser/page, logged-in state
-│   ├── test_dummy.py               # Basic smoke / dummy tests (title, simple login/inventory/cart)
-│   ├── test_login.py               # Login scenarios (all users + negatives)
-│   ├── test_inventory.py           # Add/remove, sorting, reset, descriptions, xfail for problem/visual users
-│   ├── test_cart.py                # Cart consistency & empty checks
-│   ├── test_e2e_cart.py            # (optional) Focused E2E cart flows
-│   ├── test_checkout.py            # Checkout happy path, validations, parametrized fields, cancels
-│   └── test_e2e.py                 # Complete end-to-end purchase + logout flow
-├── screenshots/                    # Auto-generated on failures (configurable)
-├── videos/                         # Auto-recorded videos on failures
-├── .coveragerc                     # Coverage configuration (optional: omit lines/files)
-├── pytest.ini                      # Pytest settings (pythonpath, addopts, markers, etc.)
-├── requirements.txt                # Dependencies: playwright, pytest, pytest-cov, etc.
-└── .github/                        # (Upcoming)
-    └── workflows/
-        └── ci.yml                  # GitHub Actions CI pipeline (multi-python, install, tests, coverage upload)
 ```
-## Installation
-
-1. Clone the repository
+### Quick Start
 
 ```bash
-
-git clone https://github.com/YOUR_USERNAME/playwright-saucedemo-framework.git
-cd playwright-saucedemo-framework
-```
-
-2. Install dependencies
-
-```bash
-
+git clone https://github.com/jerryfinol17/Python-Playwright-Saucedemo-Pom-Framework.git
+cd Python-Playwright-Saucedemo-Pom-Framework
 pip install -r requirements.txt
 playwright install --with-deps
 ```
-## Running Tests
-Run the full suite:
 
+
+### Run Tests
 ```bash
-
-pytest
-# Verbose + show summary
-pytest -v
+pytest                          # Full suite
+pytest --browser firefox --headed --slowmo 300   # Debug mode
+pytest --cov=pages --cov-report=html             # 70% coverage report
 ```
-Quick feedback on pages logic:
-
-```bash
-
-pytest tests/ --cov=pages
-```
-Generate HTML coverage report:
-```bash
-pytest --cov=pages --cov-report=html
-# Open htmlcov/index.html in your browser
-```
-Cross-browser run:
-```bash
-
-pytest --browser chromium --browser firefox --browser webkit
-```
-Useful dev flags:
-```bash
---headed, --slowmo 500, --screenshot only-on-failure, --video retain-on-failure
-```
-##Current Coverage (March 2026)
-pages/ (core business logic): 70%  
-
-Overall project: ~65%
-
-Coverage prioritizes the pages/ module (interactions & assertions). Tests & fixtures naturally lower the global %.
-
-
-## Demo
-
+### Live Demo
 [e2e.webm](videos/e2e.webm)
 
-## About & Contact
+### Why you should  love this framework?
 
-Hi! I'm **Jerry Finol** (@GordoRelig3d), a QA Junior from Venezuela currently based in the US.
+This is not just another bootcamp project — **it’s a ready-to-extend, production-oriented automation framework**
+that proves I can:Build clean, maintainable code from day one  
+Think like a senior QA (flakiness handling, coverage strategy, known-bug documentation)  
+Deliver immediate value in any e-commerce or web project
 
-I'm passionate about building reliable, maintainable automation frameworks using Python. This Sauce Demo project started as a way to level up my skills in **Playwright**, **Page Object Model**, **pytest best practices**, and **CI/CD readiness** — while having fun breaking (and fixing) a classic demo site.
+**Perfect for your team.**
 
-From manual testing roots to writing battle-tested E2E suites, I enjoy clean code, good coverage, and proving that automation doesn't have to be boring or flaky.
+### About me:
+Jerry Finol (@GordoRelig3d)! — QA Automation Engineer specialized in Python + Playwright.
+From manual testing roots to building robust E2E frameworks, I focus on delivering clean, reliable, and fast automation that saves companies time and money.Currently open for freelance and contract opportunities (remote or NJ/NY area).Need a QA Automation Engineer who can ship frameworks like this for your project?
+→ DM me on X (@GordoRelig3d)!
 
-If this repo saves you time, inspires an idea, or you want to chat about:
-- Playwright tips & tricks
-- Improving test stability (timeouts, flakiness, retries)
-- QA career paths
-- Collaborations / code reviews
-- Or just say hi...
-
-Feel free to **DM me on X** → [@GordoRelig3d](https://x.com/GordoRelig3d)
-
-¡Gracias por pasar por acá y que los tests siempre pasen en verde! 💚
+→ Email: jerrytareas17@gmail.com (or update to your pro one)¡Tests always green, clients always happy!
