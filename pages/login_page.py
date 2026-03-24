@@ -1,41 +1,48 @@
-from playwright.sync_api import Page
+from playwright.async_api import Page
 from pages.base_page import BasePage
+from pages.locators import LOGIN
+
 
 class LoginPage(BasePage):
-	USERNAME_INPUT = '[data-test="username"]'
-	PASSWORD_INPUT = '[data-test="password"]'
-	LOGIN_BUTTON = '[data-test="login-button"]'
-	ERROR = '[data-test="error"]'
-	INVENTORY_TITLE = '.title'
-	SWAG_LABS_LOGO = '.login_logo'
-	BURGER_MENU_BUTTON = '#react-burger-menu-btn'
-	LOGOUT_BUTTON = '[data-test="logout-sidebar-link"]'
 
-	def __init__(self, page : Page) -> None:
-		super().__init__(page)
+    def __init__(self, page: Page) -> None:
+        super().__init__(page)
 
-	def login(self, username: str, password: str) -> None:
-		self.fill_input(self.USERNAME_INPUT, username)
-		self.fill_input(self.PASSWORD_INPUT, password)
-		self.click_element(self.LOGIN_BUTTON, force= True)
+    # ====================== Main Action ======================
+    async def login(self, username: str, password: str) -> None:
+        await self.fill_input(LOGIN["USERNAME_INPUT"], username)
+        await self.fill_input(LOGIN["PASSWORD_INPUT"], password)
+        await self.click_element(LOGIN["LOGIN_BUTTON"], force=True)
 
-	def get_error_message_or_empty(self) -> str:
-		if self.is_visible(self.ERROR):
-			return self.get_text(self.ERROR).strip()
-		return ""
+    # ====================== Error Handling ======================
+    async def get_error_message_or_empty(self) -> str:
+        if await self.is_visible(LOGIN["ERROR"]):
+            return (await self.get_text(LOGIN["ERROR"])).strip()
+        return ""
 
-	def is_error_visible(self) -> bool:
-		return self.is_visible(self.ERROR)
+    async def is_error_visible(self) -> bool:
+        return await self.is_visible(LOGIN["ERROR"])
 
-	def is_login_ok(self) -> bool:
-		return "inventory.html" in self.page.url
+    # ====================== Login Status ======================
+    async def is_login_ok(self) -> bool:
+        try:
+            await self.assert_current_url_contains('inventory.html')
+            return True
+        except AssertionError:
+            return False
 
-	def clear_login_fields(self) -> None:
-		self.page.locator(self.USERNAME_INPUT).clear()
-		self.page.locator(self.PASSWORD_INPUT).clear()
+    async def is_on_base_page(self) -> bool:
+        return await self.is_visible(LOGIN["SWAG_LABS_LOGO"])
 
-	def is_on_base_page(self) -> bool:
-		return self.is_visible(self.SWAG_LABS_LOGO)
+    async def is_inventory_title_visible(self) -> bool:
+        return await self.is_visible(LOGIN["INVENTORY_TITLE"])
 
-	def is_inventory_title_visible(self) -> bool:
-		return self.is_visible(self.INVENTORY_TITLE)
+    # ====================== Utility Methods ======================
+    async def clear_login_fields(self) -> None:
+        await self.page.locator(LOGIN["USERNAME_INPUT"]).clear()
+        await self.page.locator(LOGIN["PASSWORD_INPUT"]).clear()
+
+    # ====================== Logout ======================
+    async def logout(self) -> None:
+        await self.click_element(LOGIN["BURGER_MENU_BUTTON"])
+        await self.click_element(LOGIN["LOGOUT_BUTTON"])
