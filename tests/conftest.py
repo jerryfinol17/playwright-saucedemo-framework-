@@ -23,19 +23,17 @@ async def page(request) -> Page:
     record_video = request.node.get_closest_marker("record_video") is not None
 
     async with async_playwright() as pw:
-        # Lanzar browser
         if browser_type == "chromium":
             browser: Browser = await pw.chromium.launch(
                 headless=True,
-                slow_mo=300,
+                slow_mo=80,
                 channel=channel
             )
         elif browser_type == "webkit":
-            browser: Browser = await pw.webkit.launch(headless=True, slow_mo=300)
+            browser: Browser = await pw.webkit.launch(headless=True, slow_mo=80)
         else:
             raise ValueError(f"Browser no soportado: {browser_type}")
 
-        # Armar kwargs del contexto
         context_kwargs = {}
         if device_name:
             device = pw.devices[device_name]
