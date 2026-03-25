@@ -6,7 +6,7 @@ from pages.locators import LOGIN
 import time
 
 POSITIVE_USERS = [
-    ("standard", True),
+    ("standard", False),
     ("problem", False),
     ("visual", False),
     ("error", False),
