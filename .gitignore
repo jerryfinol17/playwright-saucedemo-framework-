@@ -40,7 +40,6 @@ htmlcov/
 playwright/.cache/
 
 screenshots/
-videos/
 
 .vscode/
 .idea/
