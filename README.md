@@ -68,8 +68,8 @@ Open htmlcov/index.html to explore the detailed coverage.
 
 
 ### Live DemoWatch Full E2E Flow
-(Async Version) [e2eAsync.webm](videos/e2eAsync.webm)
-Complete checkout flow in under 40 seconds
+(Async Version)![E2E-gif.gif](videos/E2E-gif.gif)
+Complete checkout flow in under 20 seconds
 
 ### Why This Framework Stands Out:
 Modern **Async-first** architecture (2026 best practice)
